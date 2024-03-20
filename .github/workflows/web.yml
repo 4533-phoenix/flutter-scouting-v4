@@ -1,13 +1,18 @@
 name: Web Release
-
 on:
   push:
-    branches:  [ "master" ]
+    branches:
+      - main
+  workflow_dispatch: null
 
-  pull_request:
-    branches: [ "master" ]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-  workflow_dispatch:
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -18,7 +23,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: "12.x"
+          java-version: "17.x"
           cache: gradle
       - uses: subosito/flutter-action@v2
         with:
@@ -31,8 +36,10 @@ jobs:
       - name: Start Web Release Build
         run: flutter build web --release
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-github-pages@v3.1.12
+      - name: Upload to pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          path: ./build/web
+
+      - name: Deploy to pages
+        uses: actions/deploy-pages@v4
