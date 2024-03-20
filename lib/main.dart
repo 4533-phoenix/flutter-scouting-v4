@@ -341,7 +341,6 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-  static bool initialized = false;
   TextEditingController teamNum = TextEditingController(text: '');
   TextEditingController matchNum = TextEditingController(text: '');
   TextEditingController scouter = TextEditingController(text: '');
@@ -349,10 +348,7 @@ class _Home extends State<Home> {
   @override
   Widget build(BuildContext context) {
     widget.teamNum = 123;
-    if (!initialized) {
-      scouter.text = widget.scouter;
-      initialized = true;
-    }
+		scouter.text = widget.scouter;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -398,9 +394,9 @@ class _Home extends State<Home> {
             width: 200,
             child: TextField(
               controller: scouter,
-              onChanged: (text) {
+              onSubmitted: (text) {
                 scouter.text = text.toUpperCase();
-		widget.scouter = scouter.text;
+                widget.scouter = scouter.text;
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
