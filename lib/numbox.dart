@@ -36,13 +36,12 @@ class _NumBox extends State<NumBox> {
                 widget.callback(value);
               }
             },
-            iconSize: 48,
             icon: const Icon(Icons.remove),
           ),
         ),
-        Text(style: const TextStyle(fontSize: 24), display),
+        Text(style: const TextStyle(fontSize: 16), display),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
           child: IconButton(
             onPressed: () {
               setState(() {
@@ -50,7 +49,6 @@ class _NumBox extends State<NumBox> {
               });
               widget.callback(value);
             },
-            iconSize: 48,
             icon: const Icon(Icons.add),
           ),
         ),
