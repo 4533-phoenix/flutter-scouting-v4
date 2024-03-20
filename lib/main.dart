@@ -341,13 +341,18 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
+  static bool initialized = false;
   TextEditingController teamNum = TextEditingController(text: '');
   TextEditingController matchNum = TextEditingController(text: '');
-  TextEditingController scouter = TextEditingController(text: widget.scouter);
+  TextEditingController scouter = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
     widget.teamNum = 123;
+    if (!initialized) {
+      scouter.text = widget.scouter;
+      initialized = true;
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
