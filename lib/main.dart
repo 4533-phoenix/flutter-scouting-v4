@@ -395,8 +395,7 @@ class _Home extends State<Home> {
             child: TextField(
               controller: scouter,
               onChanged: (text) {
-                scouter.text = text.toUpperCase();
-                widget.scouter = scouter.text;
+                widget.scouter = text.toUpperCase();
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
