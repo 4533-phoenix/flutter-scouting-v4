@@ -35,8 +35,19 @@ class _Main extends State<Main> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        bottomNavigationBar: Padding(padding: const EdgeInsets.all(8), child: TextButton(
-          style: TextButton.styleFrom(padding: const EdgeInsets.all(18.0)),
+        bottomNavigationBar: Padding(padding: const EdgeInsets.all(8), child: Row(
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: [
+					IconButton(onPressed: () {
+						if (page > 0) {
+							setState(() {
+								page--;
+							});
+						}
+					}, icon: const Icon(Icons.arrow_back)),
+
+				TextButton(
+          style: TextButton.styleFrom(padding: const EdgeInsets.fromLTRB(36, 18, 36, 18), textStyle: const TextStyle(fontSize: 18)),
           onPressed: () {
             setState(() {
 							// If at last page, submit scouting data.
@@ -66,11 +77,12 @@ class _Main extends State<Main> {
               : page == 0
                   ? const Text('Scout')
                   : const Text('Next'),
-        )),
+        ),
+				])),
         body: Center(
           child: SizedBox(
             //height: 700,
-            width: 200,
+            width: 300,
             child: Center(
                 child: <Widget>[
               home,
@@ -347,7 +359,6 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    widget.teamNum = 123;
 		scouter.text = widget.scouter;
 
     return Column(
@@ -380,6 +391,16 @@ class _Home extends State<Home> {
             DropdownMenuEntry(value: 'Final', label: 'Final'),
           ],
         ),
+				SizedBox(
+            width: 200,
+            child: TextField(
+              onChanged: (text) {
+                widget.teamNum = int.tryParse(text) ?? -1;
+              },
+              decoration: const InputDecoration(label: Text('Team number')),
+							keyboardType: TextInputType.number,
+							inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            )),
         SizedBox(
             width: 200,
             child: TextField(
