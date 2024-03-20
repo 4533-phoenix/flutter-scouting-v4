@@ -111,14 +111,14 @@ class _AutoDetails extends State<AutoDetails> {
                 'Autonomous')),
         Center(
             child: Column(children: [
-          const Text('Speaker notes'),
+          const Text(style: TextStyle(fontSize: 18.0), 'Speaker notes'),
           NumBox(callback: (int val) {
             widget.speakerNotes = val;
           }),
         ])),
         Center(
             child: Column(children: [
-          const Text('Amp notes'),
+          const Text(style: TextStyle(fontSize: 18.0), 'Amp notes'),
           NumBox(callback: (int val) {
             widget.ampNotes = val;
           }),
@@ -167,21 +167,21 @@ class _TeleopDetails extends State<TeleopDetails> {
                 'Teleop')),
         Center(
             child: Column(children: [
-          const Text('Speaker notes'),
+          const Text(style: TextStyle(fontSize: 18.0), 'Speaker notes'),
           NumBox(callback: (int val) {
             widget.speakerNotes = val;
           }),
         ])),
         Center(
             child: Column(children: [
-          const Text('Amp notes'),
+          const Text(style: TextStyle(fontSize: 18.0), 'Amp notes'),
           NumBox(callback: (int val) {
             widget.ampNotes = val;
           }),
         ])),
 				Center(
 					child: Column(children: [
-					const Text('Amped speaker notes'),
+					const Text(style: TextStyle(fontSize: 18.0), 'Amped speaker notes'),
 					NumBox(callback: (int val) {
 						widget.ampedSpeakerNotes = val;
 					}),
