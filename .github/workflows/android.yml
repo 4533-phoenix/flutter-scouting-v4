@@ -5,15 +5,6 @@ on:
       - main
   workflow_dispatch: null
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build:
     name: Create Android Build
