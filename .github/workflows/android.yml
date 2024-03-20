@@ -1,0 +1,48 @@
+name: Web Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: null
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Create Android Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: "17.x"
+          cache: gradle
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Start Web Release Build
+        run: flutter build apk --release
+
+      - name: Publish nightly build
+        uses: ncipollo/release-action@v1
+        with:
+          tag: 'nightly'
+          name: 'Nightly build'
+          body: |
+            This is a automatic build of the `main` branch performed nightly.
+          artifacts: 'build/app/outputs/flutter-apk/*.apk'
+          allowUpdates: true
+          prerelease: true
