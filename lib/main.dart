@@ -396,6 +396,7 @@ class _Home extends State<Home> {
               controller: scouter,
               onChanged: (text) {
                 widget.scouter = text.toUpperCase();
+		scouter.text = widget.scouter;
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
