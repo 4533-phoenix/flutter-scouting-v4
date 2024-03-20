@@ -343,12 +343,11 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   TextEditingController teamNum = TextEditingController(text: '');
   TextEditingController matchNum = TextEditingController(text: '');
-  TextEditingController scouter = TextEditingController(text: '');
+  TextEditingController scouter = TextEditingController(text: widget.scouter);
 
   @override
   Widget build(BuildContext context) {
     widget.teamNum = 123;
-		scouter.text = widget.scouter;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -395,8 +394,8 @@ class _Home extends State<Home> {
             child: TextField(
               controller: scouter,
               onChanged: (text) {
-                widget.scouter = text.toUpperCase();
-		scouter.text = widget.scouter;
+                scouter.text = text.toUpperCase();
+		widget.scouter = scouter.text;
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
