@@ -8,6 +8,8 @@ permissions:
   id-token: write
   actions: read
   statuses: read
+  deployments: write
+  packages: write
 
 concurrency:
   group: pages
@@ -55,10 +57,10 @@ jobs:
       - name: Publish build
         uses: ncipollo/release-action@v1
         with:
-          tag: nightly
-          name: Nightly build
+          tag: ${{ github.sha }}
+          name: ${{ github.sha }}
           body: |
             This is a automatic build of the `main` branch.
           artifacts: 'build/app/outputs/flutter-apk/*.apk'
-          removeArtifacts: true
+          allowUpdates: true
           prerelease: false
