@@ -21,7 +21,8 @@ const sheetId = '1BFaDZPDPdzHZwBpT9SZUTXXw2c-J9dnDidf2Mrtc348';
 class ScoutingSheet {
   late Worksheet ws;
 
-  void submit(Home home, AutoDetails auto, TeleopDetails teleop, EndDetails end) async {
+  void submit(
+      Home home, AutoDetails auto, TeleopDetails teleop, EndDetails end) async {
     final gsheets = GSheets(credsJson);
     final s = await gsheets.spreadsheet(sheetId);
 
@@ -30,15 +31,15 @@ class ScoutingSheet {
 
     await ws.values.map.appendRow({
       'Team Number': home.teamNum,
-			'Scouter': home.scouter,
+      'Scouter': home.scouter,
       'Match Type': home.matchType,
       'Match Number': home.matchNum,
-			'Auto Amp Notes': auto.ampNotes,
-			'Auto Speaker Notes': auto.speakerNotes,
-			'Amp Notes': teleop.ampNotes,
-			'Speaker Notes': teleop.speakerNotes,
-			'Amped Speaker Notes': teleop.ampedSpeakerNotes,
-			'Comments': end.comments,
+      'Auto Amp Notes': auto.ampNotes,
+      'Auto Speaker Notes': auto.speakerNotes,
+      'Amp Notes': teleop.ampNotes,
+      'Speaker Notes': teleop.speakerNotes,
+      'Amped Speaker Notes': teleop.ampedSpeakerNotes,
+      'Comments': end.comments,
     });
 
     await gsheets.close();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NumBox extends StatefulWidget {
-  NumBox({super.key});
+  const NumBox({super.key});
 
   @override
   State<NumBox> createState() => _NumBox();
