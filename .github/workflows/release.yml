@@ -54,13 +54,12 @@ jobs:
           TBA_API_KEY: ${{ secrets.TBA_API_KEY }}
         run: flutter build apk --release
 
-      - name: Publish build
-        uses: ncipollo/release-action@v1
+      - name: Nightly Release
+        uses: andelf/nightly-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ github.sha }}
-          name: ${{ github.sha }}
-          body: |
-            This is a automatic build of the `main` branch.
-          artifacts: 'build/app/outputs/flutter-apk/*.apk'
-          allowUpdates: true
+          tag_name: nightly
+          name: 'Android Nightly Release $$'
           prerelease: false
+          files: build/app/outputs/flutter-apk/*.apk
