@@ -6,6 +6,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
+  statuses: read
 
 concurrency:
   group: pages
@@ -53,7 +55,7 @@ jobs:
       - name: Publish build
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.sha }}
+          tag: ${{ github.workflow_sha.sha }}
           name: ${{ github.sha }}
           body: |
             This is a automatic build of the `main` branch.
