@@ -5,7 +5,7 @@ class Tba {
   final Dio dio = Dio(BaseOptions(
     headers: <String, String>{
       'X-TBA-Auth-Key':
-          'cmz9aASLNBgWLR8Rn2rfoLNhCb15zEoj4rwdh0sjBsJTu4JipnVshp1XmPxUYDle'
+          const String.fromEnvironment('TBA_API_KEY')
     },
     baseUrl: 'https://www.thebluealliance.com/api/v3',
   ));
