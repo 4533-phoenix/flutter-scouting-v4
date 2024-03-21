@@ -55,10 +55,10 @@ jobs:
       - name: Publish build
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.sha }}
-          name: ${{ github.sha }}
+          tag: nightly
+          name: Nightly build
           body: |
             This is a automatic build of the `main` branch.
           artifacts: 'build/app/outputs/flutter-apk/*.apk'
-          allowUpdates: true
+          removeArtifacts: true
           prerelease: false
