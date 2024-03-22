@@ -48,18 +48,18 @@ jobs:
       - name: Deploy to pages
         uses: actions/deploy-pages@v4
 
-      - name: Start Android Release Build
-        env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          TBA_API_KEY: ${{ secrets.TBA_API_KEY }}
-        run: flutter build apk --release
+#      - name: Start Android Release Build
+#        env:
+#          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+#          TBA_API_KEY: ${{ secrets.TBA_API_KEY }}
+#        run: flutter build apk --release
 
-      - name: Nightly Release
-        uses: andelf/nightly-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: nightly
-          name: 'Android Nightly Release $$'
-          prerelease: false
-          files: build/app/outputs/flutter-apk/*.apk
+#      - name: Nightly Release
+#        uses: andelf/nightly-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: nightly
+#          name: 'Android Nightly Release $$'
+#          prerelease: false
+#          files: build/app/outputs/flutter-apk/*.apk
