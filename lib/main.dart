@@ -413,6 +413,7 @@ class _Home extends State<Home> {
           },
           dropdownMenuEntries: const [
             //DropdownMenuEntry(value: 'scriw2023', label: 'SCRIW 2023'),
+	    DropdownMenuEntry(value: 'Practice', label: 'Practice'),
             DropdownMenuEntry(value: 'Qualification', label: 'Qualification'),
             DropdownMenuEntry(value: 'Semi-final', label: 'Semi-final'),
             DropdownMenuEntry(value: 'Final', label: 'Final'),
