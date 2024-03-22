@@ -452,6 +452,9 @@ class _Home extends State<Home> {
             child: TextField(
               focusNode: scouterFocus,
               controller: scouter,
+	      onChanged: (text) {
+                widget.scouter = text;
+              },
               onSubmitted: (text) {
                 scouter.text = text.toUpperCase();
                 widget.scouter = scouter.text;
