@@ -3,7 +3,7 @@ import 'package:scouting_flutter/main.dart';
 
 const credsJson = String.fromEnvironment('GOOGLE_API_KEY');
 
-const sheetId = '1-Fx_cTEu2BXyJ6MwoB4Y1-Fx_cTEu2BXyJ6MwoB4Y2na-cALNYteOrBl4WmIAQ642na-cALNYteOrBl4WmIAQ64';
+const sheetId = '1-Fx_cTEu2BXyJ6MwoB4Y2na-cALNYteOrBl4WmIAQ64';
 
 class ScoutingSheet {
   late Worksheet ws;
