@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NumBox extends StatefulWidget {
-  NumBox({super.key, required this.callback});
+  NumBox({super.key, this.value = -1, required this.callback});
 
+  int value = -1;
   void Function(int) callback;
 
   @override
@@ -10,47 +11,54 @@ class NumBox extends StatefulWidget {
 }
 
 class _NumBox extends State<NumBox> {
-  int value = -1;
+  static const double fontSize = 32;
+  static const double iconSize = 56;
+  static const EdgeInsets btnPadding = EdgeInsets.fromLTRB(8, 4, 8, 4);
 
   @override
   Widget build(BuildContext context) {
     // By default, the value will be displayed.
-    String display = value.toString();
+    String display = widget.value.toString();
 
     // If the value is less than 0 (i.e. is -1), display a dash instead.
-    if (value < 0) {
+    if (widget.value < 0) {
       display = "-";
     }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        // Decrement button
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+          padding: btnPadding,
           child: IconButton(
             onPressed: () {
-              if (value > 0) {
+              if (widget.value > 0) {
                 setState(() {
-                  value--;
+                  widget.value--;
                 });
-                widget.callback(value);
+                widget.callback(widget.value);
               }
             },
-            iconSize: 56,
+            iconSize: iconSize,
             icon: const Icon(Icons.remove),
           ),
         ),
-        Text(style: const TextStyle(fontSize: 32), display),
+
+        // Display number
+        Text(style: const TextStyle(fontSize: fontSize), display),
+
+        // Increment button
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+          padding: btnPadding,
           child: IconButton(
             onPressed: () {
               setState(() {
-                value++;
+                widget.value++;
               });
-              widget.callback(value);
+              widget.callback(widget.value);
             },
-            iconSize: 56,
+            iconSize: iconSize,
             icon: const Icon(Icons.add),
           ),
         ),

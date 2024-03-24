@@ -44,4 +44,19 @@ class ScoutingSheet {
 
     await gsheets.close();
   }
+
+  void getTbaData() async {
+    final gsheets = GSheets(credsJson);
+    final s = await gsheets.spreadsheet(sheetId);
+
+    var ws = s.worksheetByTitle('Scouting App Data')!;
+
+    var rows = await ws.values.map.allRows();
+    for (Map<String, String> row in rows!) {
+      var teamNum = row['Team Number'];
+      var matchNum = row['Match Number'];
+      print(
+          '$teamNum - <https://thebluealliance.com/match/2024sccha_qm$matchNum>');
+    }
+  }
 }

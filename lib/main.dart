@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scouting_flutter/numbox.dart';
 import 'package:scouting_flutter/sheets.dart';
+import 'package:scouting_flutter/tba.dart';
 
 void main() async {
   //var team = await Tba().getTeam(4533);
@@ -20,10 +21,10 @@ class _Main extends State<Main> {
   static int lastPage = 3;
   static bool retry = false;
 
-  Home home = Home();
-  AutoDetails autoDetails = AutoDetails();
-  TeleopDetails teleopDetails = TeleopDetails();
-  EndDetails endDetails = EndDetails();
+  static Home home = Home();
+  static AutoDetails autoDetails = AutoDetails();
+  static TeleopDetails teleopDetails = TeleopDetails();
+  static EndDetails endDetails = EndDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,7 @@ class _Main extends State<Main> {
         body: Center(
           child: SizedBox(
             //height: 700,
-            width: 300,
+            width: 420,
             child: Center(
                 child: <Widget>[
               home,
@@ -129,16 +130,20 @@ class _AutoDetails extends State<AutoDetails> {
         Center(
             child: Column(children: [
           const Text('Speaker notes'),
-          NumBox(callback: (int val) {
-            widget.speakerNotes = val;
-          }),
+          NumBox(
+              value: widget.speakerNotes,
+              callback: (int val) {
+                widget.speakerNotes = val;
+              }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amp notes'),
-          NumBox(callback: (int val) {
-            widget.ampNotes = val;
-          }),
+          NumBox(
+              value: widget.ampNotes,
+              callback: (int val) {
+                widget.ampNotes = val;
+              }),
         ])),
         /*
         ListTile(
@@ -185,36 +190,30 @@ class _TeleopDetails extends State<TeleopDetails> {
         Center(
             child: Column(children: [
           const Text('Speaker notes'),
-          NumBox(callback: (int val) {
-            widget.speakerNotes = val;
-          }),
+          NumBox(
+              value: widget.speakerNotes,
+              callback: (int val) {
+                widget.speakerNotes = val;
+              }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amp notes'),
-          NumBox(callback: (int val) {
-            widget.ampNotes = val;
-          }),
+          NumBox(
+              value: widget.ampNotes,
+              callback: (int val) {
+                widget.ampNotes = val;
+              }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amped speaker notes'),
-          NumBox(callback: (int val) {
-            widget.ampedSpeakerNotes = val;
-          }),
-        ])),
-        /*
-        ListTile(
-          title: const Text('Leave'),
-          leading: Checkbox(
-              value: leave,
-              onChanged: (val) {
-                setState(() {
-                  leave = val!;
-                });
+          NumBox(
+              value: widget.ampedSpeakerNotes,
+              callback: (int val) {
+                widget.ampedSpeakerNotes = val;
               }),
-        ),
-				*/
+        ])),
       ],
     );
   }
@@ -254,93 +253,10 @@ class _EndDetails extends State<EndDetails> {
             decoration: const InputDecoration(labelText: 'Comments'),
           ),
         ])),
-        /*
-        ListTile(
-          title: const Text('Leave'),
-          leading: Checkbox(
-              value: leave,
-              onChanged: (val) {
-                setState(() {
-                  leave = val!;
-                });
-              }),
-        ),
-				*/
       ],
     );
   }
 }
-
-/*
-class Main extends StatefulWidget {
-  const Main({super.key});
-
-  @override
-  State<Main> createState() => _Main();
-}
-
-class _Main extends State<Main> {
-	int page = 0;
-  TextEditingController _scouter = TextEditingController(text: "");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                    'Scouting v4'
-								)
-						),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class Main extends StatefulWidget {
-  const Main({super.key});
-
-  @override
-  State<Main> createState() => _Main();
-}
-
-class _Main extends State<Main> {
-	int page = 0;
-  TextEditingController _scouter = TextEditingController(text: "");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                    'Scouting v4'
-								)
-						),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
 
 class Home extends StatefulWidget {
   Home({super.key, this.scouter = ''});
@@ -367,6 +283,16 @@ class _Home extends State<Home> {
   void initState() {
     super.initState();
 
+		scouter.text = widget.scouter;
+
+		if (widget.teamNum != -1) {
+			teamNum.text = widget.teamNum.toString();
+		}
+
+		if (widget.matchNum != -1) {
+			matchNum.text = widget.matchNum.toString();
+		}
+
     teamNumFocus = FocusNode();
     matchNumFocus = FocusNode();
     scouterFocus = FocusNode();
@@ -383,8 +309,6 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    scouter.text = widget.scouter;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -401,63 +325,59 @@ class _Home extends State<Home> {
               label: Text('Event'),
               initialSelection: 'scchs2024',
               dropdownMenuEntries: [
-                //DropdownMenuEntry(value: 'scriw2023', label: 'SCRIW 2023'),
                 DropdownMenuEntry(value: 'scchs2024', label: 'CHARLESTON'),
               ],
             )),
-        DropdownMenu(
-          label: const Text('Match type'),
-          onSelected: (val) {
-            widget.matchType = val!;
-            teamNumFocus.requestFocus();
-          },
-          dropdownMenuEntries: const [
-            //DropdownMenuEntry(value: 'scriw2023', label: 'SCRIW 2023'),
-	    DropdownMenuEntry(value: 'Practice', label: 'Practice'),
-            DropdownMenuEntry(value: 'Qualification', label: 'Qualification'),
-            DropdownMenuEntry(value: 'Semi-final', label: 'Semi-final'),
-            DropdownMenuEntry(value: 'Final', label: 'Final'),
-          ],
-        ),
-        SizedBox(
-            width: 200,
-            child: TextField(
-              focusNode: teamNumFocus,
-              onChanged: (text) {
-                widget.teamNum = int.tryParse(text) ?? -1;
-              },
-              onSubmitted: (_) {
-                matchNumFocus.requestFocus();
-              },
-              decoration: const InputDecoration(label: Text('Team number')),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            )),
-        SizedBox(
-            width: 200,
-            child: TextField(
-              focusNode: matchNumFocus,
-              onChanged: (text) {
-                widget.matchNum = int.tryParse(text) ?? -1;
-              },
-              onSubmitted: (_) {
-                scouterFocus.requestFocus();
-              },
-              decoration: const InputDecoration(label: Text('Match number')),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            )),
+        Row(
+					mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+					crossAxisAlignment: CrossAxisAlignment.center,
+					children: [
+          DropdownMenu(
+						width: 180,
+            label: const Text('Match type'),
+            initialSelection: widget.matchType,
+            onSelected: (val) {
+              widget.matchType = val!;
+              teamNumFocus.requestFocus();
+            },
+            dropdownMenuEntries: const [
+              DropdownMenuEntry(value: 'Practice', label: 'Practice'),
+              DropdownMenuEntry(value: 'Qualification', label: 'Qualification'),
+              DropdownMenuEntry(value: 'Semi-final', label: 'Semi-final'),
+              DropdownMenuEntry(value: 'Final', label: 'Final'),
+            ],
+          ),
+          SizedBox(
+              width: 100,
+              child: TextField(
+                focusNode: matchNumFocus,
+                controller: matchNum,
+                onChanged: (text) {
+                  widget.matchNum = int.tryParse(text) ?? -1;
+                },
+                onSubmitted: (_) {
+                  scouterFocus.requestFocus();
+                },
+                decoration: const InputDecoration(label: Text('Match num')),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              )),
+        ]),
         SizedBox(
             width: 200,
             child: TextField(
               focusNode: scouterFocus,
               controller: scouter,
-	      onChanged: (text) {
-                widget.scouter = text;
-              },
-              onSubmitted: (text) {
-                scouter.text = text.toUpperCase();
-                widget.scouter = scouter.text;
+							inputFormatters: [
+								TextInputFormatter.withFunction((oldValue, newValue) =>
+									TextEditingValue(
+										text: newValue.text.toUpperCase(),
+										selection: newValue.selection,
+									)
+								),
+							],
+              onChanged: (text) {
+								widget.scouter = scouter.text;
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
