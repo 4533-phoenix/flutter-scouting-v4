@@ -283,15 +283,15 @@ class _Home extends State<Home> {
   void initState() {
     super.initState();
 
-		scouter.text = widget.scouter;
+    scouter.text = widget.scouter;
 
-		if (widget.teamNum != -1) {
-			teamNum.text = widget.teamNum.toString();
-		}
+    if (widget.teamNum != -1) {
+      teamNum.text = widget.teamNum.toString();
+    }
 
-		if (widget.matchNum != -1) {
-			matchNum.text = widget.matchNum.toString();
-		}
+    if (widget.matchNum != -1) {
+      matchNum.text = widget.matchNum.toString();
+    }
 
     teamNumFocus = FocusNode();
     matchNumFocus = FocusNode();
@@ -329,55 +329,55 @@ class _Home extends State<Home> {
               ],
             )),
         Row(
-					mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-					crossAxisAlignment: CrossAxisAlignment.center,
-					children: [
-          DropdownMenu(
-						width: 180,
-            label: const Text('Match type'),
-            initialSelection: widget.matchType,
-            onSelected: (val) {
-              widget.matchType = val!;
-              teamNumFocus.requestFocus();
-            },
-            dropdownMenuEntries: const [
-              DropdownMenuEntry(value: 'Practice', label: 'Practice'),
-              DropdownMenuEntry(value: 'Qualification', label: 'Qualification'),
-              DropdownMenuEntry(value: 'Semi-final', label: 'Semi-final'),
-              DropdownMenuEntry(value: 'Final', label: 'Final'),
-            ],
-          ),
-          SizedBox(
-              width: 100,
-              child: TextField(
-                focusNode: matchNumFocus,
-                controller: matchNum,
-                onChanged: (text) {
-                  widget.matchNum = int.tryParse(text) ?? -1;
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              DropdownMenu(
+                width: 180,
+                label: const Text('Match type'),
+                initialSelection: widget.matchType,
+                onSelected: (val) {
+                  widget.matchType = val!;
+                  teamNumFocus.requestFocus();
                 },
-                onSubmitted: (_) {
-                  scouterFocus.requestFocus();
-                },
-                decoration: const InputDecoration(label: Text('Match num')),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              )),
-        ]),
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(value: 'Practice', label: 'Practice'),
+                  DropdownMenuEntry(
+                      value: 'Qualification', label: 'Qualification'),
+                  DropdownMenuEntry(value: 'Semi-final', label: 'Semi-final'),
+                  DropdownMenuEntry(value: 'Final', label: 'Final'),
+                ],
+              ),
+              SizedBox(
+                  width: 100,
+                  child: TextField(
+                    focusNode: matchNumFocus,
+                    controller: matchNum,
+                    onChanged: (text) {
+                      widget.matchNum = int.tryParse(text) ?? -1;
+                    },
+                    onSubmitted: (_) {
+                      scouterFocus.requestFocus();
+                    },
+                    decoration: const InputDecoration(label: Text('Match num')),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  )),
+            ]),
         SizedBox(
             width: 200,
             child: TextField(
               focusNode: scouterFocus,
               controller: scouter,
-							inputFormatters: [
-								TextInputFormatter.withFunction((oldValue, newValue) =>
-									TextEditingValue(
-										text: newValue.text.toUpperCase(),
-										selection: newValue.selection,
-									)
-								),
-							],
+              inputFormatters: [
+                TextInputFormatter.withFunction(
+                    (oldValue, newValue) => TextEditingValue(
+                          text: newValue.text.toUpperCase(),
+                          selection: newValue.selection,
+                        )),
+              ],
               onChanged: (text) {
-								widget.scouter = scouter.text;
+                widget.scouter = scouter.text;
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
