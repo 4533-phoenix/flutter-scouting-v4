@@ -338,7 +338,7 @@ class _Home extends State<Home> {
                 initialSelection: widget.matchType,
                 onSelected: (val) {
                   widget.matchType = val!;
-                  teamNumFocus.requestFocus();
+                  matchNumFocus.requestFocus();
                 },
                 dropdownMenuEntries: const [
                   DropdownMenuEntry(value: 'Practice', label: 'Practice'),
@@ -357,13 +357,28 @@ class _Home extends State<Home> {
                       widget.matchNum = int.tryParse(text) ?? -1;
                     },
                     onSubmitted: (_) {
-                      scouterFocus.requestFocus();
+                      teamNumFocus.requestFocus();
                     },
                     decoration: const InputDecoration(label: Text('Match num')),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   )),
             ]),
+        SizedBox(
+            width: 200,
+            child: TextField(
+              focusNode: teamNumFocus,
+              controller: teamNum,
+              onChanged: (text) {
+                widget.teamNum = int.tryParse(text) ?? -1;
+              },
+              onSubmitted: (_) {
+                scouterFocus.requestFocus();
+              },
+              decoration: const InputDecoration(label: Text('Team num')),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            )),
         SizedBox(
             width: 200,
             child: TextField(
