@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scouting_flutter/numbox.dart';
 import 'package:scouting_flutter/sheets.dart';
 import 'package:scouting_flutter/tba.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   //var team = await Tba().getTeam(4533);
@@ -279,6 +283,16 @@ class _Home extends State<Home> {
   late FocusNode matchNumFocus;
   late FocusNode scouterFocus;
 
+	//Future<SharedPreferences> db = SharedPreferences.getInstance();
+	SharedPreferences? db;
+	VoidCallback? onSubmitLocal;
+
+	void initDb() {
+		Timer.run(() async {
+			db = await SharedPreferences.getInstance().whenComplete(() => null);
+		});
+	}
+
   @override
   void initState() {
     super.initState();
@@ -296,6 +310,8 @@ class _Home extends State<Home> {
     teamNumFocus = FocusNode();
     matchNumFocus = FocusNode();
     scouterFocus = FocusNode();
+
+		initDb();
   }
 
   @override
@@ -309,6 +325,25 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+		Timer.run(() async {
+		if (db != null) {
+			if (db!.containsKey('matches')) {
+				setState(() {
+					onSubmitLocal = () {
+						setState(() {
+							onSubmitLocal = null;
+						});
+						ScoutingSheet().submitLocal();
+					};
+				});
+			} else {
+				setState(() {
+					onSubmitLocal = null;
+				});
+			}
+		}
+		});
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -396,6 +431,14 @@ class _Home extends State<Home> {
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
+				SizedBox(
+				width: 200,
+				height: 50,
+				child: Padding(padding: const EdgeInsets.only(top: 8), child: TextButton(
+					onPressed: onSubmitLocal,
+					child: const Text('Submit local data'),
+					)),
+				),
       ],
     );
   }

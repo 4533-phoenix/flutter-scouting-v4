@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:gsheets/gsheets.dart';
 import 'package:scouting_flutter/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const credsJson = r'''
 {
@@ -23,13 +26,7 @@ class ScoutingSheet {
 
   void submit(
       Home home, AutoDetails auto, TeleopDetails teleop, EndDetails end) async {
-    final gsheets = GSheets(credsJson);
-    final s = await gsheets.spreadsheet(sheetId);
-
-    var ws = s.worksheetByTitle('Scouting App Data');
-    ws ??= await s.addWorksheet('Scouting App Data');
-
-    await ws.values.map.appendRow({
+    Map<String, dynamic> data = {
       'Team Number': home.teamNum,
       'Scouter': home.scouter,
       'Match Type': home.matchType,
@@ -40,9 +37,79 @@ class ScoutingSheet {
       'Speaker Notes': teleop.speakerNotes,
       'Amped Speaker Notes': teleop.ampedSpeakerNotes,
       'Comments': end.comments,
-    });
+    };
 
-    await gsheets.close();
+    // Attempt to submit to Google Sheets
+    // If it fails, store locally.
+    try {
+			actuallySubmit(data).timeout(const Duration(milliseconds: 500));
+		} catch (err) {
+      SharedPreferences db = await SharedPreferences.getInstance();
+
+      List<String> matches;
+      if (db.containsKey('matches')) {
+        matches = db.getStringList('matches')!;
+      } else {
+        matches = <String>[];
+      }
+
+      matches.add(json.encode(data));
+
+      await db.setStringList('matches', matches);
+    }
+  }
+
+  /*
+	Actually submit to Google Sheets
+
+	Returns true if successful, false otherwise
+	*/
+  Future<bool> actuallySubmit(Map<String, dynamic> data) async {
+    try {
+      final gsheets = GSheets(credsJson);
+      final s = await gsheets.spreadsheet(sheetId);
+
+      var ws = s.worksheetByTitle('Scouting App Data');
+      ws ??= await s.addWorksheet('Scouting App Data');
+
+      await ws.values.map.appendRow(data);
+
+      await gsheets.close();
+
+      return true;
+    } catch (err) {
+      print('failed to submit: $err');
+
+      return false;
+    }
+  }
+
+  /*
+	Submit any matches stored locally
+	*/
+  Future<void> submitLocal() async {
+    SharedPreferences db = await SharedPreferences.getInstance();
+
+    List<String>? matches = db.getStringList('matches');
+
+    // If null, there aren't any local matches to submit :)
+    if (matches == null) {
+      return;
+    }
+
+    for (String m in matches) {
+      Map<String, dynamic> mdata = json.decode(m);
+
+      // Attempt to submit to Google Sheets
+      // If it fails, return.
+      if (!await actuallySubmit(mdata)) {
+        return;
+      }
+    }
+
+		db.clear();
+
+    return;
   }
 
   void getTbaData() async {
