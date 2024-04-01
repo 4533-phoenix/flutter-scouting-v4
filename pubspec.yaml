@@ -39,6 +39,7 @@ dependencies:
   tba_api_v3: ^1.1.1
 
   dio: any
+  shared_preferences: ^2.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

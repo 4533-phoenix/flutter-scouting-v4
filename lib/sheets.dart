@@ -19,7 +19,7 @@ const credsJson = r'''
 }
 ''';
 
-const sheetId = '1-Fx_cTEu2BXyJ6MwoB4Y2na-cALNYteOrBl4WmIAQ64';
+const sheetId = '1L9ts1zaHFFullpZt9-CVx_nyNf_pvqZ5RzqQq7Fjps4';
 
 class ScoutingSheet {
   late Worksheet ws;
@@ -39,11 +39,20 @@ class ScoutingSheet {
       'Comments': end.comments,
     };
 
+		bool submitSuccess = false;
+
     // Attempt to submit to Google Sheets
     // If it fails, store locally.
-    try {
-			actuallySubmit(data).timeout(const Duration(milliseconds: 500));
-		} catch (err) {
+			Main.submitInProgress = true;
+      await actuallySubmit(data).then((success) {
+				if (success) {
+					submitSuccess = true;
+				}
+				Main.submitInProgress = false; 
+			});//.timeout(const Duration(milliseconds: 500));
+
+			if (!Main.submitInProgress && !submitSuccess) {
+				Main.submitInProgress = true;
       SharedPreferences db = await SharedPreferences.getInstance();
 
       List<String> matches;
@@ -56,6 +65,8 @@ class ScoutingSheet {
       matches.add(json.encode(data));
 
       await db.setStringList('matches', matches);
+
+			Main.submitInProgress = false;
     }
   }
 
@@ -67,7 +78,7 @@ class ScoutingSheet {
   Future<bool> actuallySubmit(Map<String, dynamic> data) async {
     try {
       final gsheets = GSheets(credsJson);
-      final s = await gsheets.spreadsheet(sheetId);
+      final s = await gsheets.spreadsheet(sheetId).timeout(const Duration(milliseconds: 700));
 
       var ws = s.worksheetByTitle('Scouting App Data');
       ws ??= await s.addWorksheet('Scouting App Data');
@@ -107,7 +118,7 @@ class ScoutingSheet {
       }
     }
 
-		db.clear();
+    db.clear();
 
     return;
   }
