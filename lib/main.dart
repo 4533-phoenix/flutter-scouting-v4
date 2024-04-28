@@ -16,8 +16,6 @@ void main() async {
 class Main extends StatefulWidget {
   const Main({super.key});
 
-	static bool submitInProgress = false;
-
   @override
   State<Main> createState() => _Main();
 }
@@ -272,7 +270,7 @@ class Home extends StatefulWidget {
   int matchNum = -1;
   String scouter = '';
 
-	bool submitInProgress = false;
+  bool submitInProgress = false;
 
   @override
   State<Home> createState() => _Home();
@@ -286,16 +284,6 @@ class _Home extends State<Home> {
   late FocusNode teamNumFocus;
   late FocusNode matchNumFocus;
   late FocusNode scouterFocus;
-
-  //Future<SharedPreferences> db = SharedPreferences.getInstance();
-  SharedPreferences? db;
-  VoidCallback? onSubmitLocal;
-
-  void initDb() {
-    Timer.run(() async {
-      db = await SharedPreferences.getInstance().whenComplete(() => null);
-    });
-  }
 
   @override
   void initState() {
@@ -314,8 +302,6 @@ class _Home extends State<Home> {
     teamNumFocus = FocusNode();
     matchNumFocus = FocusNode();
     scouterFocus = FocusNode();
-
-    initDb();
   }
 
   @override
@@ -329,25 +315,6 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Timer.run(() async {
-      if (db != null) {
-        if (db!.containsKey('matches') && !widget.submitInProgress) {
-          setState(() {
-            onSubmitLocal = () {
-              setState(() {
-                onSubmitLocal = null;
-              });
-              ScoutingSheet().submitLocal();
-            };
-          });
-        } else {
-          setState(() {
-            onSubmitLocal = null;
-          });
-        }
-      }
-    });
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -435,16 +402,6 @@ class _Home extends State<Home> {
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),
-        SizedBox(
-          width: 200,
-          height: 50,
-          child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: TextButton(
-                onPressed: onSubmitLocal,
-                child: const Text('Submit local data'),
-              )),
-        ),
       ],
     );
   }

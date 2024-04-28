@@ -39,88 +39,15 @@ class ScoutingSheet {
       'Comments': end.comments,
     };
 
-		bool submitSuccess = false;
+    final gsheets = GSheets(credsJson);
+    final s = await gsheets.spreadsheet(sheetId);
 
-    // Attempt to submit to Google Sheets
-    // If it fails, store locally.
-			Main.submitInProgress = true;
-      await actuallySubmit(data).then((success) {
-				if (success) {
-					submitSuccess = true;
-				}
-				Main.submitInProgress = false; 
-			});//.timeout(const Duration(milliseconds: 500));
+    var ws = s.worksheetByTitle('Scouting App Data');
+    ws ??= await s.addWorksheet('Scouting App Data');
 
-			if (!Main.submitInProgress && !submitSuccess) {
-				Main.submitInProgress = true;
-      SharedPreferences db = await SharedPreferences.getInstance();
+    await ws.values.map.appendRow(data);
 
-      List<String> matches;
-      if (db.containsKey('matches')) {
-        matches = db.getStringList('matches')!;
-      } else {
-        matches = <String>[];
-      }
-
-      matches.add(json.encode(data));
-
-      await db.setStringList('matches', matches);
-
-			Main.submitInProgress = false;
-    }
-  }
-
-  /*
-	Actually submit to Google Sheets
-
-	Returns true if successful, false otherwise
-	*/
-  Future<bool> actuallySubmit(Map<String, dynamic> data) async {
-    try {
-      final gsheets = GSheets(credsJson);
-      final s = await gsheets.spreadsheet(sheetId).timeout(const Duration(milliseconds: 700));
-
-      var ws = s.worksheetByTitle('Scouting App Data');
-      ws ??= await s.addWorksheet('Scouting App Data');
-
-      await ws.values.map.appendRow(data);
-
-      await gsheets.close();
-
-      return true;
-    } catch (err) {
-      print('failed to submit: $err');
-
-      return false;
-    }
-  }
-
-  /*
-	Submit any matches stored locally
-	*/
-  Future<void> submitLocal() async {
-    SharedPreferences db = await SharedPreferences.getInstance();
-
-    List<String>? matches = db.getStringList('matches');
-
-    // If null, there aren't any local matches to submit :)
-    if (matches == null) {
-      return;
-    }
-
-    for (String m in matches) {
-      Map<String, dynamic> mdata = json.decode(m);
-
-      // Attempt to submit to Google Sheets
-      // If it fails, return.
-      if (!await actuallySubmit(mdata)) {
-        return;
-      }
-    }
-
-    db.clear();
-
-    return;
+    await gsheets.close();
   }
 
   void getTbaData() async {
