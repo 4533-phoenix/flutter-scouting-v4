@@ -1,11 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scouting_flutter/numbox.dart';
 import 'package:scouting_flutter/sheets.dart';
-import 'package:scouting_flutter/tba.dart';
 
 void main() async {
   //var team = await Tba().getTeam(4533);
@@ -24,10 +20,7 @@ class _Main extends State<Main> {
   static int lastPage = 3;
   static bool retry = false;
 
-  static Home home = Home();
-  static AutoDetails autoDetails = AutoDetails();
-  static TeleopDetails teleopDetails = TeleopDetails();
-  static EndDetails endDetails = EndDetails();
+  static Map<String, dynamic> scoutData = <String, dynamic>{};
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +53,10 @@ class _Main extends State<Main> {
                     // Otherwise, increment page num.
                     if (page == lastPage) {
                       try {
-                        ScoutingSheet().submit(
-                            home, autoDetails, teleopDetails, endDetails);
-                        home = Home(scouter: home.scouter);
-                        autoDetails = AutoDetails();
-                        teleopDetails = TeleopDetails();
-                        endDetails = EndDetails();
+                        ScoutingSheet().submit(scoutData);
+                        scoutData = {
+                          'scouter': scoutData['scouter'],
+                        };
                         page = 0;
                       } catch (err) {
                         retry = true;
@@ -94,10 +85,18 @@ class _Main extends State<Main> {
             width: 420,
             child: Center(
                 child: <Widget>[
-              home,
-              autoDetails,
-              teleopDetails,
-              endDetails,
+              Home(callback: (map) {
+                scoutData.addAll(map);
+              }),
+              AutoDetails(callback: (map) {
+                scoutData.addAll(map);
+              }),
+              TeleopDetails(callback: (map) {
+                scoutData.addAll(map);
+              }),
+              EndDetails(callback: (map) {
+                scoutData.addAll(map);
+              }),
             ][page]),
           ),
         ),
@@ -107,16 +106,34 @@ class _Main extends State<Main> {
 }
 
 class AutoDetails extends StatefulWidget {
-  AutoDetails({super.key});
+  const AutoDetails({super.key, required this.callback});
 
-  int speakerNotes = 0;
-  int ampNotes = 0;
+  final void Function(Map<String, int>) callback;
 
   @override
   State<AutoDetails> createState() => _AutoDetails();
 }
 
 class _AutoDetails extends State<AutoDetails> {
+  int speakerNotes = 0;
+  int ampNotes = 0;
+
+  @override
+  void initState() {
+    speakerNotes = _Main.scoutData['autoSpeakerNotes'] ?? 0;
+    ampNotes = _Main.scoutData['autoAmpNotes'] ?? 0;
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    widget.callback({
+      'autoSpeakerNotes': speakerNotes,
+      'autoAmpNotes': ampNotes,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -134,49 +151,61 @@ class _AutoDetails extends State<AutoDetails> {
             child: Column(children: [
           const Text('Speaker notes'),
           NumBox(
-              value: widget.speakerNotes,
+              initValue: speakerNotes,
               callback: (int val) {
-                widget.speakerNotes = val;
+                setState(() {
+                  speakerNotes = val;
+                });
               }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amp notes'),
           NumBox(
-              value: widget.ampNotes,
+              initValue: ampNotes,
               callback: (int val) {
-                widget.ampNotes = val;
-              }),
-        ])),
-        /*
-        ListTile(
-          title: const Text('Leave'),
-          leading: Checkbox(
-              value: leave,
-              onChanged: (val) {
                 setState(() {
-                  leave = val!;
+                  ampNotes = val;
                 });
               }),
-        ),
-				*/
+        ])),
       ],
     );
   }
 }
 
 class TeleopDetails extends StatefulWidget {
-  TeleopDetails({super.key});
+  const TeleopDetails({super.key, required this.callback});
 
-  int speakerNotes = 0;
-  int ampNotes = 0;
-  int ampedSpeakerNotes = 0;
+  final void Function(Map<String, int>) callback;
 
   @override
   State<TeleopDetails> createState() => _TeleopDetails();
 }
 
 class _TeleopDetails extends State<TeleopDetails> {
+  int speakerNotes = 0;
+  int ampNotes = 0;
+  int ampedSpeakerNotes = 0;
+
+  @override
+  void initState() {
+    speakerNotes = _Main.scoutData['teleopSpeakerNotes'] ?? 0;
+    ampNotes = _Main.scoutData['teleopAmpNotes'] ?? 0;
+    ampedSpeakerNotes = _Main.scoutData['teleopAmpedSpeakerNotes'] ?? 0;
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    widget.callback({
+      'teleopSpeakerNotes': speakerNotes,
+      'teleopAmpNotes': ampNotes,
+      'teleopAmpedSpeakerNotes': ampedSpeakerNotes,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -194,27 +223,33 @@ class _TeleopDetails extends State<TeleopDetails> {
             child: Column(children: [
           const Text('Speaker notes'),
           NumBox(
-              value: widget.speakerNotes,
+              initValue: speakerNotes,
               callback: (int val) {
-                widget.speakerNotes = val;
+                setState(() {
+                  speakerNotes = val;
+                });
               }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amp notes'),
           NumBox(
-              value: widget.ampNotes,
+              initValue: ampNotes,
               callback: (int val) {
-                widget.ampNotes = val;
+                setState(() {
+                  ampNotes = val;
+                });
               }),
         ])),
         Center(
             child: Column(children: [
           const Text('Amped speaker notes'),
           NumBox(
-              value: widget.ampedSpeakerNotes,
+              initValue: ampedSpeakerNotes,
               callback: (int val) {
-                widget.ampedSpeakerNotes = val;
+                setState(() {
+                  ampedSpeakerNotes = val;
+                });
               }),
         ])),
       ],
@@ -223,15 +258,31 @@ class _TeleopDetails extends State<TeleopDetails> {
 }
 
 class EndDetails extends StatefulWidget {
-  EndDetails({super.key});
+  const EndDetails({super.key, required this.callback});
 
-  String comments = '';
+  final void Function(Map<String, dynamic>) callback;
 
   @override
   State<EndDetails> createState() => _EndDetails();
 }
 
 class _EndDetails extends State<EndDetails> {
+  String comments = '';
+
+  @override
+  void initState() {
+    comments = _Main.scoutData['comments'] ?? '';
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    widget.callback({
+      'comments': comments,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -249,7 +300,9 @@ class _EndDetails extends State<EndDetails> {
             child: Column(children: [
           TextField(
             onChanged: (val) {
-              widget.comments = val;
+              setState(() {
+                comments = val;
+              });
             },
             minLines: 3,
             maxLines: 5,
@@ -262,23 +315,23 @@ class _EndDetails extends State<EndDetails> {
 }
 
 class Home extends StatefulWidget {
-  Home({super.key, this.scouter = ''});
+  const Home({super.key, required this.callback});
 
-  int teamNum = -1;
-  String matchType = '';
-  int matchNum = -1;
-  String scouter = '';
-
-  bool submitInProgress = false;
+  final void Function(Map<String, dynamic>) callback;
 
   @override
   State<Home> createState() => _Home();
 }
 
 class _Home extends State<Home> {
-  TextEditingController teamNum = TextEditingController(text: '');
-  TextEditingController matchNum = TextEditingController(text: '');
-  TextEditingController scouter = TextEditingController(text: '');
+  int teamNum = -1;
+  String matchType = '';
+  int matchNum = -1;
+  String scouter = '';
+
+  TextEditingController teamNumEdCtrl = TextEditingController(text: '');
+  TextEditingController matchNumEdCtrl = TextEditingController(text: '');
+  TextEditingController scouterEdCtrl = TextEditingController(text: '');
 
   late FocusNode teamNumFocus;
   late FocusNode matchNumFocus;
@@ -288,19 +341,35 @@ class _Home extends State<Home> {
   void initState() {
     super.initState();
 
-    scouter.text = widget.scouter;
+    scouter = _Main.scoutData['scouter'] ?? '';
+    teamNum = _Main.scoutData['teamNum'] ?? -1;
+    matchType = _Main.scoutData['matchType'] ?? '';
+    matchNum = _Main.scoutData['matchNum'] ?? -1;
 
-    if (widget.teamNum != -1) {
-      teamNum.text = widget.teamNum.toString();
+    scouterEdCtrl.text = scouter;
+
+    if (teamNum != -1) {
+      teamNumEdCtrl.text = teamNum.toString();
     }
 
-    if (widget.matchNum != -1) {
-      matchNum.text = widget.matchNum.toString();
+    if (matchNum != -1) {
+      matchNumEdCtrl.text = matchNum.toString();
     }
 
     teamNumFocus = FocusNode();
     matchNumFocus = FocusNode();
     scouterFocus = FocusNode();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    widget.callback({
+      'scouter': scouter,
+      'teamNum': teamNum,
+      'matchType': matchType,
+      'matchNum': matchNum,
+    });
   }
 
   @override
@@ -340,9 +409,11 @@ class _Home extends State<Home> {
               DropdownMenu(
                 width: 180,
                 label: const Text('Match type'),
-                initialSelection: widget.matchType,
+                initialSelection: matchType,
                 onSelected: (val) {
-                  widget.matchType = val!;
+                  setState(() {
+                    matchType = val!;
+                  });
                   matchNumFocus.requestFocus();
                 },
                 dropdownMenuEntries: const [
@@ -357,9 +428,11 @@ class _Home extends State<Home> {
                   width: 100,
                   child: TextField(
                     focusNode: matchNumFocus,
-                    controller: matchNum,
+                    controller: matchNumEdCtrl,
                     onChanged: (text) {
-                      widget.matchNum = int.tryParse(text) ?? -1;
+                      setState(() {
+                        matchNum = int.tryParse(text) ?? -1;
+                      });
                     },
                     onSubmitted: (_) {
                       teamNumFocus.requestFocus();
@@ -373,9 +446,11 @@ class _Home extends State<Home> {
             width: 200,
             child: TextField(
               focusNode: teamNumFocus,
-              controller: teamNum,
+              controller: teamNumEdCtrl,
               onChanged: (text) {
-                widget.teamNum = int.tryParse(text) ?? -1;
+                setState(() {
+                  teamNum = int.tryParse(text) ?? -1;
+                });
               },
               onSubmitted: (_) {
                 scouterFocus.requestFocus();
@@ -388,7 +463,7 @@ class _Home extends State<Home> {
             width: 200,
             child: TextField(
               focusNode: scouterFocus,
-              controller: scouter,
+              controller: scouterEdCtrl,
               inputFormatters: [
                 TextInputFormatter.withFunction(
                     (oldValue, newValue) => TextEditingValue(
@@ -397,7 +472,9 @@ class _Home extends State<Home> {
                         )),
               ],
               onChanged: (text) {
-                widget.scouter = scouter.text;
+                setState(() {
+                  scouter = scouterEdCtrl.text;
+                });
               },
               decoration: const InputDecoration(label: Text('Initials')),
             )),

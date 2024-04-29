@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:gsheets/gsheets.dart';
-import 'package:scouting_flutter/main.dart';
 
 const credsJson = r'''
 {
@@ -23,21 +20,7 @@ const sheetId = '1-l7BygqY_aW0vbwB4rjsV-Bx2lRO-V8_MvasGr2eXbo';
 class ScoutingSheet {
   late Worksheet ws;
 
-  void submit(
-      Home home, AutoDetails auto, TeleopDetails teleop, EndDetails end) async {
-    Map<String, dynamic> data = {
-      'Team Number': home.teamNum,
-      'Scouter': home.scouter,
-      'Match Type': home.matchType,
-      'Match Number': home.matchNum,
-      'Auto Amp Notes': auto.ampNotes,
-      'Auto Speaker Notes': auto.speakerNotes,
-      'Amp Notes': teleop.ampNotes,
-      'Speaker Notes': teleop.speakerNotes,
-      'Amped Speaker Notes': teleop.ampedSpeakerNotes,
-      'Comments': end.comments,
-    };
-
+  void submit(Map<String, dynamic> data) async {
     final gsheets = GSheets(credsJson);
     final s = await gsheets.spreadsheet(sheetId);
 
@@ -49,6 +32,7 @@ class ScoutingSheet {
     await gsheets.close();
   }
 
+  /*
   void getTbaData() async {
     final gsheets = GSheets(credsJson);
     final s = await gsheets.spreadsheet(sheetId);
@@ -63,4 +47,5 @@ class ScoutingSheet {
           '$teamNum - <https://thebluealliance.com/match/2024sccha_qm$matchNum>');
     }
   }
+	*/
 }
