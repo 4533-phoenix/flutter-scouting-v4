@@ -55,7 +55,9 @@ class MainState extends State<Main> {
                     // Otherwise, increment page num
                     if (page == lastPage) {
                       try {
-                        ScoutingSheet().submit(scoutData);
+												var data = <String, dynamic>{};
+												data.addAll(scoutData);
+                        ScoutingSheet().submit(data);
 
                         // Reset scoutData, but using the same scouter initials
                         scoutData = {
