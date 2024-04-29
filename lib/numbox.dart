@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NumBox extends StatefulWidget {
-  NumBox({super.key, this.value = -1, required this.callback});
+  NumBox({super.key, this.value = 0, required this.callback});
 
-  int value = -1;
+  int value = 0;
   void Function(int) callback;
 
   @override
@@ -19,11 +19,6 @@ class _NumBox extends State<NumBox> {
   Widget build(BuildContext context) {
     // By default, the value will be displayed.
     String display = widget.value.toString();
-
-    // If the value is less than 0 (i.e. is -1), display a dash instead.
-    if (widget.value < 0) {
-      display = "-";
-    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

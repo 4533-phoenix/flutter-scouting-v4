@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:gsheets/gsheets.dart';
 import 'package:scouting_flutter/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const credsJson = r'''
 {

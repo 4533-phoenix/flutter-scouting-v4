@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:scouting_flutter/numbox.dart';
 import 'package:scouting_flutter/sheets.dart';
 import 'package:scouting_flutter/tba.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   //var team = await Tba().getTeam(4533);
@@ -110,8 +109,8 @@ class _Main extends State<Main> {
 class AutoDetails extends StatefulWidget {
   AutoDetails({super.key});
 
-  int speakerNotes = -1;
-  int ampNotes = -1;
+  int speakerNotes = 0;
+  int ampNotes = 0;
 
   @override
   State<AutoDetails> createState() => _AutoDetails();
@@ -169,9 +168,9 @@ class _AutoDetails extends State<AutoDetails> {
 class TeleopDetails extends StatefulWidget {
   TeleopDetails({super.key});
 
-  int speakerNotes = -1;
-  int ampNotes = -1;
-  int ampedSpeakerNotes = -1;
+  int speakerNotes = 0;
+  int ampNotes = 0;
+  int ampedSpeakerNotes = 0;
 
   @override
   State<TeleopDetails> createState() => _TeleopDetails();
