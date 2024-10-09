@@ -18,7 +18,7 @@ const credsJson = r'''
 }
 ''';
 
-const sheetId = '1-l7BygqY_aW0vbwB4rjsV-Bx2lRO-V8_MvasGr2eXbo';
+const sheetId = '10qG0P9vYwTufODa_nN8c-zj3AMaf11B7eZUReINfdpQ';
 
 class ScoutingSheet {
   late Worksheet ws;
