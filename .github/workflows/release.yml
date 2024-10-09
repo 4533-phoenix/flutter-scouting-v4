@@ -35,7 +35,7 @@ jobs:
         run: flutter pub get
       
       - name: Start Web Release Build
-        run: flutter build web --release --dart-define=GOOGLE_API_KEY='${{ secrets.GOOGLE_API_KEY }}' --no-web-resources-cdn --web-renderer html
+        run: flutter build web --dart-define=GOOGLE_API_KEY='${{ secrets.GOOGLE_API_KEY }}' --release --no-web-resources-cdn --web-renderer html
 
       - name: Upload to pages
         uses: actions/upload-pages-artifact@v3
