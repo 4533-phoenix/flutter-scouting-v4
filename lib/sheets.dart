@@ -5,7 +5,7 @@ import 'package:gsheets/gsheets.dart';
 import 'package:scouting_flutter/main.dart';
 
 final credsBase64 = String.fromEnvironment('GOOGLE_API_KEY', defaultValue: '');
-final credsJson = utf8.decode(base64.decode(credsBase64);
+final credsJson = utf8.decode(base64.decode(credsBase64));
 
 final sheetId = '10qG0P9vYwTufODa_nN8c-zj3AMaf11B7eZUReINfdpQ';
 
