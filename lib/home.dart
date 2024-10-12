@@ -85,9 +85,9 @@ class _Home extends State<Home> {
             padding: EdgeInsets.only(bottom: 16),
             child: DropdownMenu(
               label: Text('Event'),
-              initialSelection: 'scchs2024',
+              initialSelection: 'scriw',
               dropdownMenuEntries: [
-                DropdownMenuEntry(value: 'scchs2024', label: 'PCH DCMP'),
+                DropdownMenuEntry(value: 'scriw', label: 'SCRIW'),
               ],
             )),
         Row(
